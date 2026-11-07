@@ -5,14 +5,11 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
 from google import genai
 
-# Configuration des logs
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-# Récupération des clés depuis les variables d'environnement Render
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
-# Initialisation du client Google GenAI
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -28,8 +25,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         reply_text = response.text
     except Exception as e:
-        logging.error(f"Erreur Gemini: {e}")
-        reply_text = "Désolé, une erreur technique est survenue."
+        logging.error(f"Erreur Gemini détaillée: {e}")
+        reply_text = f"Erreur technique: {str(e)}"
     
     await context.bot.send_message(chat_id=chat_id, text=reply_text)
 
